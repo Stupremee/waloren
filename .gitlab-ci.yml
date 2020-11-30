@@ -3,7 +3,7 @@ stages:
   - build
   - upload
 
-environment:
+variables:
   CACHIX_NAME: stu
   NIX_FLAGS: "--experimental-features 'nix-command flakes'"
 
