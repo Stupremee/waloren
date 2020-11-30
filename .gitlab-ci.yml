@@ -17,19 +17,24 @@ format:
 build-project:
   stage: build
   image: nixos/nix:latest
+  before_script:
+    - nix-env -iA nixpkgs.nixFlakes
   script:
     - nix $NIX_FLAGS build
 
 unit-tests:
   stage: build
   image: nixos/nix:latest
+  before_script:
+    - nix-env -iA nixpkgs.nixFlakes
   script:
     - nix $NIX_FLAGS build .#test
 
 cachix:
   stage: upload
+  image: nixos/nix:latest
   before_script:
-    - nix-env -iA nixpkgs.cachix nixpkgs.bash
+    - nix-env -iA nixpkgs.cachix nixpkgs.bash nixpkgs.nixFlakes
     - cachix use mycache
     - nix path-info --all > /tmp/store-path-pre-build
   script:
