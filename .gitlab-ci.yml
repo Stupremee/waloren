@@ -5,7 +5,7 @@ stages:
 
 variables:
   CACHIX_NAME: stu
-  NIX_FLAGS: "--experimental-features 'nix-command flakes'"
+  NIX_FLAGS: "--experimental-features 'nix-command'"
 
 format:
   stage: check
