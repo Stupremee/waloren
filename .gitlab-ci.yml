@@ -18,13 +18,13 @@ build-project:
   stage: build
   image: nixos/nix:latest
   script:
-    - nix $(NIX_FLAGS) build
+    - nix $NIX_FLAGS build
 
 unit-tests:
   stage: build
   image: nixos/nix:latest
   script:
-    - nix $(NIX_FLAGS) build .#test
+    - nix $NIX_FLAGS build .#test
 
 cachix:
   stage: upload
