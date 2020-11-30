@@ -2,21 +2,21 @@ stages:
   - check
   - build
 
-format:
+check:
   stage: check
   image: rustlang/rust:nightly
   script:
     - cargo fmt --all -- --check
     - cargo clippy --all -- -D warnings
 
-build-project:
+build:
   stage: build
   image: rustlang/rust:nightly
   script:
     - cargo build --verbose
 
-unit-tests:
+test:
   stage: build
   image: rustlang/rust:nightly
   script:
-    - cargo build --verbose -- --nocapture
+    - cargo test --verbose -- --nocapture
