@@ -16,7 +16,7 @@ format:
 
 build-project:
   stage: build
-  image: nixpkgs/nix-unstable:latest
+  image: nixpkgs/nix-flakes:latest
   before_script:
     - nix-env -iA nixpkgs.nixFlakes
   script:
@@ -24,7 +24,7 @@ build-project:
 
 unit-tests:
   stage: build
-  image: nixpkgs/nix-unstable:latest
+  image: nixpkgs/nix-flakes:latest
   before_script:
     - nix-env -iA nixpkgs.nixFlakes
   script:
@@ -32,7 +32,7 @@ unit-tests:
 
 cachix:
   stage: upload
-  image: nixpkgs/nix-unstable:latest
+  image: nixpkgs/nix-flakes:latest
   before_script:
     - nix-env -iA nixpkgs.cachix nixpkgs.bash nixpkgs.nixFlakes
     - cachix use mycache
