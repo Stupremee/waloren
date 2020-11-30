@@ -3,6 +3,10 @@ stages:
   - build
   - upload
 
+environment:
+  CACHIX_NAME: stu
+  NIX_FLAGS: "--experimental-features 'nix-command flakes'"
+
 format:
   stage: check
   image: rustlang/rust:nightly
@@ -14,13 +18,13 @@ build-project:
   stage: build
   image: nixos/nix:latest
   script:
-    - nix build
+    - nix $(NIX_FLAGS) build
 
 unit-tests:
   stage: build
   image: nixos/nix:latest
   script:
-    - nix build .#test
+    - nix $(NIX_FLAGS) build .#test
 
 cachix:
   stage: upload
@@ -29,6 +33,6 @@ cachix:
     - cachix use mycache
     - nix path-info --all > /tmp/store-path-pre-build
   script:
-    - nix build
+    - nix $(NIX_FLAGS) build
   after_script:
     - nix flake archive --json | jq -r '.path,(.inputs|to_entries[].value.path)' | cachix push $CACHIX_NAME
