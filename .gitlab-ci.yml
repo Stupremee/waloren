@@ -16,7 +16,7 @@ format:
 
 build-project:
   stage: build
-  image: nixos/nix:latest
+  image: nixpkgs/nix-unstable:latest
   before_script:
     - nix-env -iA nixpkgs.nixFlakes
   script:
@@ -24,7 +24,7 @@ build-project:
 
 unit-tests:
   stage: build
-  image: nixos/nix:latest
+  image: nixpkgs/nix-unstable:latest
   before_script:
     - nix-env -iA nixpkgs.nixFlakes
   script:
@@ -32,12 +32,12 @@ unit-tests:
 
 cachix:
   stage: upload
-  image: nixos/nix:latest
+  image: nixpkgs/nix-unstable:latest
   before_script:
     - nix-env -iA nixpkgs.cachix nixpkgs.bash nixpkgs.nixFlakes
     - cachix use mycache
     - nix path-info --all > /tmp/store-path-pre-build
   script:
-    - nix $(NIX_FLAGS) build
+    - nix $NIX_FLAGS build
   after_script:
     - nix flake archive --json | jq -r '.path,(.inputs|to_entries[].value.path)' | cachix push $CACHIX_NAME
