@@ -1,22 +1,34 @@
 stages:
   - check
   - build
-
-default:
-  image: rustlang/rust:nightly
+  - upload
 
 format:
   stage: check
+  image: rustlang/rust:nightly
   script:
-    - cargo clippy --all -- -D warnings
     - cargo fmt --all -- --check
+    - cargo clippy --all -- -D warnings
 
 build-project:
   stage: build
+  image: nixos/nix:latest
   script:
-    - cargo build --verbose
+    - nix build
 
 unit-tests:
   stage: build
+  image: nixos/nix:latest
   script:
-    - cargo test --verbose -- --nocapture
+    - nix build .#test
+
+cachix:
+  stage: upload
+  before_script:
+    - nix-env -iA nixpkgs.cachix nixpkgs.bash
+    - cachix use mycache
+    - nix path-info --all > /tmp/store-path-pre-build
+  script:
+    - nix build
+  after_script:
+    - nix flake archive --json | jq -r '.path,(.inputs|to_entries[].value.path)' | cachix push $CACHIX_NAME
